@@ -9,8 +9,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.IOException;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
@@ -21,6 +25,11 @@ public class MainActivity extends AppCompatActivity {
     final Button callClearButton = findViewById(R.id.clearButton);
     final Button callReadButton = findViewById(R.id.readButton);
     final Button callWriteButton = findViewById(R.id.writeButton);
+
+    private String filename = "jugar.txt";
+    private String filepath = "jugar_externalio";
+    File akongFile;
+    String akongGitype = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,19 +79,16 @@ public class MainActivity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
                         try {
-                            FileOutputStream fileout=openFileOutput("mytextfile.txt", MODE_PRIVATE);
-                            OutputStreamWriter outputWriter=new OutputStreamWriter(fileout);
-                            outputWriter.write(callTextBox.getText().toString());
-                            outputWriter.close();
-
-                            //display file saved message
-                            Toast.makeText(getBaseContext(), "File saved successfully!",
-                                    Toast.LENGTH_SHORT).show();
-
-                        } catch (Exception e) {
+                            FileOutputStream fos = new FileOutputStream(akongFile);
+                            fos.write(callTextBox.getText().toString().getBytes());
+                            fos.close();
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
+                        Toast.makeText(getBaseContext(), "File saved successfully!",
+                                Toast.LENGTH_SHORT).show();
                     }
                 }
         );
