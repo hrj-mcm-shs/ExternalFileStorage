@@ -3,6 +3,7 @@ package org.kcnq.externalfilestorage;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,16 +17,17 @@ import java.io.OutputStreamWriter;
 public class MainActivity extends AppCompatActivity {
 
     static final int READ_BLOCK_SIZE = 100;
+    final EditText callTextBox = findViewById(R.id.textBox);
+    final Button callClearButton = findViewById(R.id.clearButton);
+    final Button callReadButton = findViewById(R.id.readButton);
+    final Button callWriteButton = findViewById(R.id.writeButton);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final EditText callTextBox = findViewById(R.id.textBox);
-        final Button callClearButton = findViewById(R.id.clearButton);
-        final Button callReadButton = findViewById(R.id.readButton);
-        final Button callWriteButton = findViewById(R.id.writeButton);
+
 
         callClearButton.setOnClickListener(
                 new View.OnClickListener() {
@@ -84,7 +86,30 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
+
+        if (!isExternalStorageAvailable() || isExternalStorageReadOnly()) {
+            callWriteButton.setEnabled(false);
+        }
+
     }
+
+    public static boolean isExternalStorageReadOnly() {
+        String extStorageState = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(extStorageState)) {
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean isExternalStorageAvailable() {
+        String extStorageState = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(extStorageState)) {
+            return true;
+        }
+        return false;
+    }
+
+
 }
 
 // hihihihi
